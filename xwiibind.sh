@@ -1,15 +1,15 @@
 #!/bin/sh
-
+#
 #
 # XWiimote - tools
 # Written 2011-2013 by David Herrmann
 # Dedicated to the Public Domain
 #
-
+#
 # Modified very slightly by Ryan Myers to clarify instructions for a Wiiboard
 # and automatically trust the device so it can 
 # reconnect with no user interaction.
-
+#
 #
 # This script enables auto-reconnect on your wiimote. This script should only be
 # used if you really require auto-reconnect now. There is work going on to get
@@ -64,7 +64,7 @@
 # host. You only need to acknowledge the connection in the simple-agent by
 # writing "yes" when it prompts you.
 #
-
+#
 # pass PYTHON=xy to overwrite this
 if test "x$PYTHON" = "x" ; then
 	PYTHON="python2"

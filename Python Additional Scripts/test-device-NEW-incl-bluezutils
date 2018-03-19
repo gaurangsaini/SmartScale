@@ -1,0 +1,249 @@
+#!/usr/bin/python
+
+from __future__ import absolute_import, print_function, unicode_literals
+
+from optparse import OptionParser, make_option
+import re
+import sys
+import dbus
+import dbus.mainloop.glib
+try:
+  from gi.repository import GObject
+except ImportError:
+  import gobject as GObject
+
+dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+bus = dbus.SystemBus()
+mainloop = GObject.MainLoop()
+
+option_list = [
+		make_option("-i", "--device", action="store",
+				type="string", dest="dev_id"),
+		]
+parser = OptionParser(option_list=option_list)
+
+(options, args) = parser.parse_args()
+
+if (len(args) < 1):
+	print("Usage: %s <command>" % (sys.argv[0]))
+	print("")
+	print("  list")
+	print("  create <address>")
+	print("  remove <address|path>")
+	print("  connect <address> [profile]")
+	print("  disconnect <address> [profile]")
+	print("  class <address>")
+	print("  name <address>")
+	print("  alias <address> [alias]")
+	print("  trusted <address> [yes/no]")
+	print("  blocked <address> [yes/no]")
+	sys.exit(1)
+
+
+SERVICE_NAME = "org.bluez"
+ADAPTER_INTERFACE = SERVICE_NAME + ".Adapter1"
+DEVICE_INTERFACE = SERVICE_NAME + ".Device1"
+
+def get_managed_objects():
+	bus = dbus.SystemBus()
+	manager = dbus.Interface(bus.get_object("org.bluez", "/"),
+				"org.freedesktop.DBus.ObjectManager")
+	return manager.GetManagedObjects()
+
+def find_adapter(pattern=None):
+	return find_adapter_in_objects(get_managed_objects(), pattern)
+
+def find_adapter_in_objects(objects, pattern=None):
+	bus = dbus.SystemBus()
+	for path, ifaces in objects.iteritems():
+		adapter = ifaces.get(ADAPTER_INTERFACE)
+		if adapter is None:
+			continue
+		if not pattern or pattern == adapter["Address"] or \
+							path.endswith(pattern):
+			obj = bus.get_object(SERVICE_NAME, path)
+			return dbus.Interface(obj, ADAPTER_INTERFACE)
+	raise Exception("Bluetooth adapter not found")
+
+def find_device(device_address, adapter_pattern=None):
+	return find_device_in_objects(get_managed_objects(), device_address,
+								adapter_pattern)
+
+def find_device_in_objects(objects, device_address, adapter_pattern=None):
+	bus = dbus.SystemBus()
+	path_prefix = ""
+	if adapter_pattern:
+		adapter = find_adapter_in_objects(objects, adapter_pattern)
+		path_prefix = adapter.object_path
+	for path, ifaces in objects.iteritems():
+		device = ifaces.get(DEVICE_INTERFACE)
+		if device is None:
+			continue
+		if (device["Address"] == device_address and
+						path.startswith(path_prefix)):
+			obj = bus.get_object(SERVICE_NAME, path)
+			return dbus.Interface(obj, DEVICE_INTERFACE)
+
+	raise Exception("Bluetooth device not found")
+	
+	
+if (args[0] == "list"):
+	adapter = find_adapter(options.dev_id)
+	adapter_path = adapter.object_path
+
+	om = dbus.Interface(bus.get_object("org.bluez", "/"),
+					"org.freedesktop.DBus.ObjectManager")
+	objects = om.GetManagedObjects()
+
+	for path, interfaces in objects.iteritems():
+		if "org.bluez.Device1" not in interfaces:
+			continue
+		properties = interfaces["org.bluez.Device1"]
+		if properties["Adapter"] != adapter_path:
+			continue;
+		print("%s %s" % (properties["Address"], properties["Alias"]))
+
+	sys.exit(0)
+
+def create_device_reply(device):
+	print("New device (%s)" % device)
+	mainloop.quit()
+	sys.exit(0)
+
+def create_device_error(error):
+	print("Creating device failed: %s" % error)
+	mainloop.quit()
+	sys.exit(1)
+
+if (args[0] == "create"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		adapter = find_adapter(options.dev_id)
+		adapter.CreateDevice(args[1],
+				reply_handler=create_device_reply,
+				error_handler=create_device_error)
+	mainloop.run()
+
+if (args[0] == "remove"):
+	if (len(args) < 2):
+		print("Need address or object path parameter")
+	else:
+		managed_objects = get_managed_objects()
+		adapter = find_adapter_in_objects(managed_objects,
+								options.dev_id)
+		try:
+			dev = find_device_in_objects(managed_objects,
+								args[1],
+								options.dev_id)
+			path = dev.object_path
+		except:
+			path = args[1]
+		adapter.RemoveDevice(path)
+	sys.exit(0)
+
+if (args[0] == "connect"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		device = find_device(args[1], options.dev_id)
+		if (len(args) > 2):
+			device.ConnectProfile(args[2])
+		else:
+			device.Connect()
+	sys.exit(0)
+
+if (args[0] == "disconnect"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		device = find_device(args[1], options.dev_id)
+		if (len(args) > 2):
+			device.DisconnectProfile(args[2])
+		else:
+			device.Disconnect()
+	sys.exit(0)
+
+if (args[0] == "class"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		device = find_device(args[1], options.dev_id)
+		path = device.object_path
+		props = dbus.Interface(bus.get_object("org.bluez", path),
+					"org.freedesktop.DBus.Properties")
+		cls = props.Get("org.bluez.Device1", "Class")
+		print("0x%06x" % cls)
+	sys.exit(0)
+
+if (args[0] == "name"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		device = find_device(args[1], options.dev_id)
+		path = device.object_path
+		props = dbus.Interface(bus.get_object("org.bluez", path),
+					"org.freedesktop.DBus.Properties")
+		name = props.Get("org.bluez.Device1", "Name")
+		print(name)
+	sys.exit(0)
+
+if (args[0] == "alias"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		device = find_device(args[1], options.dev_id)
+		path = device.object_path
+		props = dbus.Interface(bus.get_object("org.bluez", path),
+					"org.freedesktop.DBus.Properties")
+		if (len(args) < 3):
+			alias = props.Get("org.bluez.Device1", "Alias")
+			print(alias)
+		else:
+			props.Set("org.bluez.Device1", "Alias", args[2])
+	sys.exit(0)
+
+if (args[0] == "trusted"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		device = find_device(args[1], options.dev_id)
+		path = device.object_path
+		props = dbus.Interface(bus.get_object("org.bluez", path),
+					"org.freedesktop.DBus.Properties")
+		if (len(args) < 3):
+			trusted = props.Get("org.bluez.Device1", "Trusted")
+			print(trusted)
+		else:
+			if (args[2] == "yes"):
+				value = dbus.Boolean(1)
+			elif (args[2] == "no"):
+				value = dbus.Boolean(0)
+			else:
+				value = dbus.Boolean(args[2])
+			props.Set("org.bluez.Device1", "Trusted", value)
+	sys.exit(0)
+
+if (args[0] == "blocked"):
+	if (len(args) < 2):
+		print("Need address parameter")
+	else:
+		device = find_device(args[1], options.dev_id)
+		path = device.object_path
+		props = dbus.Interface(bus.get_object("org.bluez", path),
+					"org.freedesktop.DBus.Properties")
+		if (len(args) < 3):
+			blocked = props.Get("org.bluez.Device1", "Blocked")
+			print(blocked)
+		else:
+			if (args[2] == "yes"):
+				value = dbus.Boolean(1)
+			elif (args[2] == "no"):
+				value = dbus.Boolean(0)
+			else:
+				value = dbus.Boolean(args[2])
+			props.Set("org.bluez.Device1", "Blocked", value)
+	sys.exit(0)
+
+print("Unknown command")
+sys.exit(1)

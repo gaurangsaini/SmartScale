@@ -272,7 +272,7 @@ def main():
     board = Wiiboard(processor)
     if len(sys.argv) == 1:
         print "Discovering board..."
-        address = board.discover()
+        address = "34:AF:2C:2D:82:7E"
     else:
         address = sys.argv[1]
 
