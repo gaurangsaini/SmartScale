@@ -5,9 +5,17 @@ import time
 import bluetooth
 import sys
 import subprocess
+import time
+import SevenSegment
+
+display = SevenSegment.SevenSegment()
+display.begin()
+display.clear()
+display.write_display()
+weightval = None
 
 # --------- User Settings ---------
-WEIGHT_SAMPLES = 500
+WEIGHT_SAMPLES = 84
 # ---------------------------------
 
 # Wiiboard Parameters
@@ -27,7 +35,6 @@ TOP_LEFT = 2
 BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
 
-
 class EventProcessor:
     def __init__(self):
         self._measured = False
@@ -36,7 +43,12 @@ class EventProcessor:
         self._events = range(WEIGHT_SAMPLES)
 
     def mass(self, event):
-        if (event.totalWeight > 2):
+	weightval = event.totalWeight
+	if (weightval<1):
+		display.clear()
+		display.write_display()
+		
+        if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
             self._measureCnt += 1
             if self._measureCnt == WEIGHT_SAMPLES:
@@ -45,9 +57,11 @@ class EventProcessor:
                     self._sum += self._events[x]
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
-                print str(self._weight) + " lbs"
+		printonscreen(self._weight)	#use weightval for kilograms
+                #print str(self._weight) + " lbs"
             if not self._measured:
                 self._measured = True
+
 
     @property
     def weight(self):
@@ -265,6 +279,11 @@ class Wiiboard:
     def wait(self, millis):
         time.sleep(millis / 1000.0)
 
+def printonscreen(vajan):
+	display.clear()
+	display.print_float(vajan, decimal_digits=1)
+	display.write_display()
+	return
 
 def main():
     processor = EventProcessor()
@@ -272,7 +291,7 @@ def main():
     board = Wiiboard(processor)
     if len(sys.argv) == 1:
         print "Discovering board..."
-        address = "34:AF:2C:2D:82:7E"
+        address = board.discover() 	# "34:AF:2C:2D:82:7E"
     else:
         address = sys.argv[1]
 
