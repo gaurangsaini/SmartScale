@@ -44,11 +44,11 @@ class EventProcessor:
 
     def mass(self, event):
 	weightval = event.totalWeight
-	if (weightval<1):
+	if (weightval<1.5):
 		display.clear()
 		display.write_display()
 		
-        if (event.totalWeight > 1):
+        if (event.totalWeight > 1.5):
             self._events[self._measureCnt] = event.totalWeight*2.20462
             self._measureCnt += 1
             if self._measureCnt == WEIGHT_SAMPLES:
