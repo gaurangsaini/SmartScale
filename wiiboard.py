@@ -10,12 +10,11 @@ import SevenSegment
 
 display = SevenSegment.SevenSegment()
 display.begin()
-display.clear()
-display.write_display()
+
 weightval = None
 
 # --------- User Settings ---------
-WEIGHT_SAMPLES = 84
+WEIGHT_SAMPLES = 78
 # ---------------------------------
 
 # Wiiboard Parameters
@@ -44,11 +43,11 @@ class EventProcessor:
 
     def mass(self, event):
 	weightval = event.totalWeight
-	if (weightval<1.5):
+	if (weightval<1):
 		display.clear()
 		display.write_display()
 		
-        if (event.totalWeight > 1.5):
+        if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
             self._measureCnt += 1
             if self._measureCnt == WEIGHT_SAMPLES:
@@ -128,6 +127,10 @@ class Wiiboard:
             self.send(useExt)
             self.setReportingType()
             print "Wiiboard connected"
+            display.clear()
+            sevenseginit = -100.5
+            display.print_float(sevenseginit)
+            display.write_display()
         else:
             print "Could not connect to Wiiboard at address " + address
 
