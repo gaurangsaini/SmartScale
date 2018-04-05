@@ -3,13 +3,18 @@ import time
 import os
 import SevenSegment
 
-time.sleep(120)
-
 display = SevenSegment.SevenSegment()
 display.begin()
+display.clear()
+display.set_colon(True)
+display.write_display()
+
+time.sleep(15)
+
 
 i=34952
 display.clear()
+display.set_colon(False)
 display.print_hex(i)
 display.write_display()
 
