@@ -14,7 +14,7 @@ display.begin()
 weightval = None
 
 # --------- User Settings ---------
-WEIGHT_SAMPLES = 78
+WEIGHT_SAMPLES = 48
 # ---------------------------------
 
 # Wiiboard Parameters
@@ -56,7 +56,7 @@ class EventProcessor:
                     self._sum += self._events[x]
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
-		printonscreen(self._weight-15.8)	#use weightval for kilograms
+                printonscreen(self._weight)	#use weightval for kilograms
                 #print str(self._weight) + " lbs"
             if not self._measured:
                 self._measured = True
