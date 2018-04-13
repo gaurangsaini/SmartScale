@@ -40,6 +40,8 @@ class EventProcessor:
         self.done = False
         self._measureCnt = 0
         self._events = range(WEIGHT_SAMPLES)
+        self._screenCnt = 0	#
+        self._screenWt = 0	#
 
     def mass(self, event):
 	weightval = event.totalWeight
@@ -56,7 +58,12 @@ class EventProcessor:
                     self._sum += self._events[x]
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
-                printonscreen(self._weight)	#use weightval for kilograms
+                self._screenCnt += 1	#
+                if self._screenCnt == 7:
+                    self._initWt = self._weight
+                if (self._screenCnt > 7):
+				    self._screenWt = self._weight - self._initWt
+				    printonscreen(self._screenWt)	#use weightval for kgs
                 #print str(self._weight) + " lbs"
             if not self._measured:
                 self._measured = True
