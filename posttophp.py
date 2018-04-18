@@ -1,12 +1,3 @@
-import NAHI requests NAHI
-
-vajan = {"scaleid": "1", "weight": WEIGHT}
-
-resp = requests.post('https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php', params=vajan)
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 #!/usr/bin/env python
 
 import collections
@@ -17,7 +8,6 @@ import subprocess
 import time
 import SevenSegment
 import urllib
-import urllib2
 
 display = SevenSegment.SevenSegment()
 display.begin()
@@ -53,6 +43,7 @@ class EventProcessor:
         self._events = range(WEIGHT_SAMPLES)
         self._screenCnt = 0	#
         self._screenWt = 0	#
+        self._scaleId = 1	#
 
     def mass(self, event):
 	weightval = event.totalWeight
@@ -74,33 +65,8 @@ class EventProcessor:
                     self._initWt = self._weight
                 if (self._screenCnt > 7):
 				    self._screenWt = self._weight - self._initWt
-					
-					//scaleid
-					self._screenWt = htmlspecialchars($_GET["weight"]);	
-					
-					params = urllib.urlencode(self._screenWt) # parameters is dicitonar
-					req = urllib2.Request(PP_URL, params) # PP_URL is the destionation URL
-					req.add_header("Content-type", "application/x-www-form-urlencoded")
-					response = urllib2.urlopen(req)
-					
-					
-					
-					import urllib2
-					from base64 import b64encode
-
-					request = urllib2.Request('https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php')
-					request.add_header('Authorization', 'Basic ' + b64encode('user' + ':' + 'pass'))
-					r = urllib2.urlopen(request)
-
-					print r.getcode()
-					print r.headers["content-type"]
-					print r.headers["X-RateLimit-Limit"]
-					
-					
-					
-					
-					
-					
+				    url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._screenWt)
+				    urllib.urlopen(url)
 				    printonscreen(self._screenWt)	#use weightval for kgs
                 #print str(self._weight) + " lbs"
             if not self._measured:
