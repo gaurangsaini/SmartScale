@@ -50,7 +50,7 @@ class EventProcessor:
 	if (weightval<1):
 		display.clear()
 		display.write_display()
-		
+
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
             self._measureCnt += 1
@@ -65,6 +65,7 @@ class EventProcessor:
                     self._initWt = self._weight
                 if (self._screenCnt > 7):
 				    self._screenWt = self._weight - self._initWt
+				    self._screenWt = round(self._screenWt, 1)
 				    url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._screenWt)
 				    urllib.urlopen(url)
 				    printonscreen(self._screenWt)	#use weightval for kgs
