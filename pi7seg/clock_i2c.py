@@ -9,9 +9,9 @@ import seven_segment_i2c
 def main():    
     try:
         #model b rev 1.0
-        bus = seven_segment_i2c.SevenSegmentI2c(0)
+        #bus = seven_segment_i2c.SevenSegmentI2c(0)
         #model b rev 2.0
-        #bus = seven_segment_i2c.SevenSegmentI2c(1)
+        bus = seven_segment_i2c.SevenSegmentI2c(1)
         display = seven_segment_display.SevenSegmentDisplay(bus)
         display.clear_display()
         enable_colon = False
