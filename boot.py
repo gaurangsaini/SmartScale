@@ -14,7 +14,7 @@ display.clear_display()
 colon = [0b00010000]
 display.set_nondigits(colon)
 
-time.sleep(5)
+time.sleep(15)
 
 display.clear_display()
 display.write_int(8888)
