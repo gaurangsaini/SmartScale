@@ -6,11 +6,12 @@ import bluetooth
 import sys
 import subprocess
 import time
-import SevenSegment
 import urllib
+import seven_segment_display
+import seven_segment_i2c
 
-display = SevenSegment.SevenSegment()
-display.begin()
+bus = seven_segment_i2c.SevenSegmentI2c(1)
+display = seven_segment_display.SevenSegmentDisplay(bus)
 
 weightval = None
 
@@ -47,9 +48,9 @@ class EventProcessor:
 
     def mass(self, event):
 	weightval = event.totalWeight
-	if (weightval<1):
-		display.clear()
-		display.write_display()
+#	if (weightval<1):
+#		display.clear()
+#		display.write_display()
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
@@ -68,7 +69,7 @@ class EventProcessor:
 				    self._screenWt = round(self._screenWt, 1)
 				    url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._screenWt)
 				    urllib.urlopen(url)
-				    printonscreen(self._screenWt)	#use weightval for kgs
+				    printondisplay(self._screenWt)	#use weightval for kgs
                 #print str(self._weight) + " lbs"
             if not self._measured:
                 self._measured = True
@@ -139,10 +140,8 @@ class Wiiboard:
             self.send(useExt)
             self.setReportingType()
             print "Wiiboard connected"
-            display.clear()
-            sevenseginit = -100.5
-            display.print_float(sevenseginit)
-            display.write_display()
+            display.clear_display()
+            init_display()
         else:
             print "Could not connect to Wiiboard at address " + address
 
@@ -294,11 +293,29 @@ class Wiiboard:
     def wait(self, millis):
         time.sleep(millis / 1000.0)
 
-def printonscreen(vajan):
-	display.clear()
-	display.print_float(vajan, decimal_digits=1)
-	display.write_display()
+#def printonscreen(vajan):
+	#display.clear()
+	#display.print_float(vajan, decimal_digits=1)
+	#display.write_display()
+	#return
+	
+def printondisplay(vajan):
+	display.clear_display()
+	decimalpt = [0b00000100,0b00100000]
+	display.set_nondigits(decimalpt)	
+	intpart = int(vajan // 1)
+	decpart = int((vajan % 1)*10)
+	#print 'int ', intpart, ' & dec part ', decpart
+	z = int('%d%d' % (intpart, decpart))
+	display.write_int(z)
 	return
+
+def init_display():
+	segment = [0b01000000]
+	display.write_segments(0, segment)
+	display.write_segments(1, segment)
+	display.write_segments(2, segment)
+	display.write_segments(3, segment)
 
 def main():
     processor = EventProcessor()

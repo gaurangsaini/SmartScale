@@ -181,7 +181,7 @@ class SevenSegmentDisplay(object):
 
         for i in range(len(write_str)):
             self.write_digit_to_position(i, ord(write_str[i]))
-			
+
 def main():
     print 'press enter to execute each command'
     try:

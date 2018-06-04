@@ -1,22 +1,23 @@
 import RPi.GPIO as GPIO
 import time
 import os
-import SevenSegment
+import seven_segment_display
+import seven_segment_i2c
 
-display = SevenSegment.SevenSegment()
-display.begin()
-display.clear()
-display.set_colon(True)
-display.write_display()
+bus = seven_segment_i2c.SevenSegmentI2c(1)
+display = seven_segment_display.SevenSegmentDisplay(bus)
 
-time.sleep(15)
+display.clear_display()
+display.set_brightness_level(100)
+display.clear_display()
 
+colon = [0b00010000]
+display.set_nondigits(colon)
 
-i=34952
-display.clear()
-display.set_colon(False)
-display.print_hex(i)
-display.write_display()
+time.sleep(5)
+
+display.clear_display()
+display.write_int(8888)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
