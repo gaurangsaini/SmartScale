@@ -62,6 +62,7 @@ class EventProcessor:
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
                 self._screenCnt += 1	#
+                print self._weight
                 if self._screenCnt == 7:
                     self._initWt = self._weight
                 if (self._screenCnt > 7):
@@ -305,9 +306,13 @@ def printondisplay(vajan):
 	display.set_nondigits(decimalpt)	
 	intpart = int(vajan // 1)
 	decpart = int((vajan % 1)*10)
+	z = '%d%d' % (intpart, decpart)
 	#print 'int ', intpart, ' & dec part ', decpart
-	z = int('%d%d' % (intpart, decpart))
-	display.write_int(z)
+	#print z, ' ===== ',vajan
+	if (vajan < 0):
+	    display.write_segments(2, [0b01000000])
+	else:
+	    display.write_int(z)
 	return
 
 def init_display():
