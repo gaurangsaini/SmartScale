@@ -303,7 +303,7 @@ class Wiiboard:
 def printondisplay(vajan):
 	display.clear_display()
 	decimalpt = [0b00000100,0b00100000]
-	display.set_nondigits(decimalpt)	
+	display.set_nondigits(decimalpt)
 	intpart = int(vajan // 1)
 	decpart = int((vajan % 1)*10)
 	z = '%d%d' % (intpart, decpart)
