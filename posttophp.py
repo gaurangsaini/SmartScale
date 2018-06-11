@@ -44,7 +44,7 @@ class EventProcessor:
         self._events = range(WEIGHT_SAMPLES)
         self._screenCnt = 0	#
         self._screenWt = 0	#
-        self._scaleId = 2	#
+        self._scaleId = 3	#
 
     def mass(self, event):
 	weightval = event.totalWeight

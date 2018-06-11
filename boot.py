@@ -26,5 +26,5 @@ while True:
     input_state = GPIO.input(4)
     if input_state == False:
         print('Button Pressed')
-        os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2E:76:00')
+        os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2E:43:FF')
         time.sleep(1)
