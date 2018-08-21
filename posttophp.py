@@ -41,15 +41,10 @@ class EventProcessor:
         self.done = False
         self._measureCnt = 0
         self._events = range(WEIGHT_SAMPLES)
-        self._screenCnt = 0	#
-        self._screenWt = 0	#
         self._scaleId = 6	#
 
     def mass(self, event):
 	weightval = event.totalWeight
-	if (weightval<1):
-		display.clear()
-		display.write_display()
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
@@ -60,16 +55,10 @@ class EventProcessor:
                     self._sum += self._events[x]
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
-                self._screenCnt += 1	#
-                if self._screenCnt == 7:
-                    self._initWt = self._weight
-                if (self._screenCnt > 7):
-				    self._screenWt = self._weight - self._initWt
-				    self._screenWt = round(self._screenWt, 1)
-				    url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._screenWt)
-				    urllib.urlopen(url)
-				    printonscreen(self._screenWt)	#use weightval for kgs
-                print str(self._weight) + " lbs"
+                print self._weight
+		url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
+		urllib.urlopen(url)
+		printonscreen(self._weight)
             if not self._measured:
                 self._measured = True
 
