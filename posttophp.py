@@ -7,11 +7,11 @@ import sys
 import subprocess
 import time
 import urllib
-import seven_segment_display
-import seven_segment_i2c
+#import seven_segment_display
+#import seven_segment_i2c
 
-bus = seven_segment_i2c.SevenSegmentI2c(1)
-display = seven_segment_display.SevenSegmentDisplay(bus)
+#bus = seven_segment_i2c.SevenSegmentI2c(1)
+#display = seven_segment_display.SevenSegmentDisplay(bus)
 
 weightval = None
 
@@ -59,7 +59,7 @@ class EventProcessor:
                 print self._weight
 		url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
 		urllib.urlopen(url)
-		printondisplay(self._weight)
+#		printondisplay(self._weight)
             if not self._measured:
                 self._measured = True
 
@@ -129,8 +129,8 @@ class Wiiboard:
             self.send(useExt)
             self.setReportingType()
             print "Wiiboard connected"
-            display.clear_display()
-            init_display()
+#            display.clear_display()
+#            init_display()
         else:
             print "Could not connect to Wiiboard at address " + address
 
@@ -288,27 +288,27 @@ class Wiiboard:
 	#display.write_display()
 	#return
 	
-def printondisplay(vajan):
-	display.clear_display()
-	decimalpt = [0b00000100,0b00100000]
-	display.set_nondigits(decimalpt)	
-	intpart = int(vajan // 1)
-	decpart = int((vajan % 1)*10)
-	z = '%d%d' % (intpart, decpart)
-	#print 'int ', intpart, ' & dec part ', decpart
-	#print z, ' ===== ',vajan
-	if (vajan < 0):
-	    display.write_segments(2, [0b01000000])
-	else:
-	    display.write_int(z)
-	return
+#def printondisplay(vajan):
+#	display.clear_display()
+#	decimalpt = [0b00000100,0b00100000]
+#	display.set_nondigits(decimalpt)	
+#	intpart = int(vajan // 1)
+#	decpart = int((vajan % 1)*10)
+#	z = '%d%d' % (intpart, decpart)
+#	#print 'int ', intpart, ' & dec part ', decpart
+#	#print z, ' ===== ',vajan
+#	if (vajan < 0):
+#	    display.write_segments(2, [0b01000000])
+#	else:
+#	    display.write_int(z)
+#	return
 
-def init_display():
-	segment = [0b01000000]
-	display.write_segments(0, segment)
-	display.write_segments(1, segment)
-	display.write_segments(2, segment)
-	display.write_segments(3, segment)
+#def init_display():
+#	segment = [0b01000000]
+#	display.write_segments(0, segment)
+#	display.write_segments(1, segment)
+#	display.write_segments(2, segment)
+#	display.write_segments(3, segment)
 
 def main():
     processor = EventProcessor()
