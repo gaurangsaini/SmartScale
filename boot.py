@@ -20,7 +20,7 @@ time.sleep(15)
 #display.write_int(8888)
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 #GPIO CHANGED FROM 4 TO 17, to 27 (!)
 while True:
     input_state = GPIO.input(27)
