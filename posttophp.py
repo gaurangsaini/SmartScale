@@ -57,7 +57,7 @@ class EventProcessor:
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
                 print self._weight
-		url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
+		url = "http://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
 		urllib.urlopen(url)
 		printondisplay(self._weight)
             if not self._measured:
