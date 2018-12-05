@@ -2,12 +2,13 @@ import RPi.GPIO as GPIO
 import time
 import os
 
+GPIO.setmode(GPIO.BCM)
+
 GPIO.setup(21, GPIO.OUT)
 GPIO.output(21, GPIO.HIGH)
 
 #time.sleep(15)
 
-GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 #GPIO CHANGED FROM 4 TO 17, to 27, to 21(!)
 while True:
