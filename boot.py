@@ -1,23 +1,11 @@
 import RPi.GPIO as GPIO
 import time
 import os
-#import seven_segment_display
-#import seven_segment_i2c
 
-#bus = seven_segment_i2c.SevenSegmentI2c(1)
-#display = seven_segment_display.SevenSegmentDisplay(bus)
-
-#display.clear_display()
-#display.set_brightness_level(100)
-#display.clear_display()
-
-#colon = [0b00010000]
-#display.set_nondigits(colon)
+GPIO.setup(21, GPIO.OUT)
+GPIO.output(21, GPIO.HIGH)
 
 #time.sleep(15)
-
-#display.clear_display()
-#display.write_int(8888)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -33,7 +21,6 @@ while True:
         time.sleep(0.25)
 
         GPIO.output(26, GPIO.LOW)
-        GPIO.cleanup()
         
         os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
         time.sleep(1)
