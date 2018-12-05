@@ -1,11 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 import os
+import gpiozero
 
 GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(21, GPIO.OUT)
-GPIO.output(21, GPIO.HIGH)
+led = PWMLED(16)
+
+led.pulse()
 
 #time.sleep(15)
 
