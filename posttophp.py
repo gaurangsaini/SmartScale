@@ -35,6 +35,7 @@ BOTTOM_RIGHT = 1
 TOP_LEFT = 2
 BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
+weighta = weightb = weightc = 0					#
 
 class EventProcessor:
     def __init__(self):
@@ -46,7 +47,6 @@ class EventProcessor:
 
     def mass(self, event):
 	weightval = event.totalWeight
-	weighta = weightb = weightc = 0		#
 	led = gpiozero.LED(16)						#
 
         if (event.totalWeight > 1):
