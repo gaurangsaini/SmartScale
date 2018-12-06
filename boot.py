@@ -3,6 +3,7 @@ import time
 import os
 import gpiozero
 import threading
+import subprocess
 
 GPIO.cleanup()
 
