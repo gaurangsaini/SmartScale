@@ -30,7 +30,7 @@ def onbuttonpress():
 
     def posttophp():
         #posttophp = os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
-        subprocess.Popen(["python", "/home/pi/SmartScale/posttophp.py", "34:AF:2C:2D:9E:4B"], shell=True)
+        subprocess.Popen(["python", "/home/pi/SmartScale/posttophp.py", "34:AF:2C:2D:9E:4B"])
 
     pp = threading.Thread(name='posttophp', target=posttophp)
     pp.start()
