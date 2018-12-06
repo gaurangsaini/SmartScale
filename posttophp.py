@@ -45,6 +45,13 @@ class EventProcessor:
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
             self._measureCnt += 1
+            
+            global weighta 		#
+            global weightb 		#
+            global weightc		#
+            weighta = weightb = weightc = 1			#
+            led = gpiozero.LED(16)					#
+            
             if self._measureCnt == WEIGHT_SAMPLES:
                 self._sum = 0
                 for x in range(0, WEIGHT_SAMPLES-1):
@@ -312,12 +319,6 @@ def main():
     except:
         pass
 
-    global weighta 		#
-    global weightb 		#
-    global weightc		#
-    weighta = weightb = weightc = 1			#
-    led = gpiozero.LED(16)					#
-    
     print "Trying to connect..."
     board.connect(address)  # The wii board must be in sync mode at this time
     board.wait(200)
