@@ -47,7 +47,7 @@ class EventProcessor:
     def mass(self, event):
 	weightval = event.totalWeight
 	weighta = weightb = weightc = 0		#
-	led = LED(16)						#
+	led = gpiozero.LED(16)						#
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
