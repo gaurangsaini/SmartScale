@@ -20,11 +20,11 @@ def pulseled():
 p = threading.Thread(name='pulseled', target=pulseled)
 
 def killprocesses():
-    p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['ps', '-aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():
-        if 'python' in line:
-            pid = int(line.split(None, 1)[0])
+        if 'posttophp.py' in line:
+            pid = int(line.split(None, 2)[1])
             os.kill(pid, signal.SIGKILL)
 
 def onbuttonpress():
