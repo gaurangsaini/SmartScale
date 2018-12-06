@@ -12,7 +12,8 @@ GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)   #front-button gpio detection
 GPIO.setup(26, GPIO.OUT)
 
 def onbuttonpress():
-    gpiozero.PWMLED(16).value = 0
+    led = gpiozero.PWMLED(16)
+    led.value = 0
     
     print('Button Pressed')
     
@@ -33,7 +34,8 @@ def onbuttonpress():
 o = threading.Thread(name='onbuttonpress', target=onbuttonpress)
 
 def detectbuttonpress():
-    gpiozero.PWMLED(16).pulse()
+    led = gpiozero.PWMLED(16)
+    led.pulse()
 
     input_state = GPIO.input(21)
     if input_state == False:
