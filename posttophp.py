@@ -31,6 +31,9 @@ TOP_LEFT = 2
 BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
 
+weighta = weightb = weightc = 0 		#
+led = gpiozero.LED(16)					#
+
 class EventProcessor:
     def __init__(self):
         self._measured = False
@@ -44,14 +47,7 @@ class EventProcessor:
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
-            self._measureCnt += 1
-            
-            global weighta 		#
-            global weightb 		#
-            global weightc		#
-            weighta = weightb = weightc = 1			#
-            led = gpiozero.LED(16)					#
-            
+            self._measureCnt += 1            
             if self._measureCnt == WEIGHT_SAMPLES:
                 self._sum = 0
                 for x in range(0, WEIGHT_SAMPLES-1):
@@ -287,6 +283,11 @@ class Wiiboard:
         time.sleep(millis / 1000.0)
 
 def indicateonled(vajan):
+
+    global weighta
+    global weightb
+    global weightc
+
     weightc = weightb			#
     weightb = weighta 			#
     weighta = vajan				#
