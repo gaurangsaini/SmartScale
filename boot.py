@@ -18,7 +18,6 @@ def pulseled():
 p = threading.Thread(name='pulseled', target=pulseled)
 
 def onbuttonpress():
-    p.stop()
     led = gpiozero.PWMLED(16)
     led.value = 0
     
