@@ -4,14 +4,13 @@ import os
 import gpiozero
 from signal import pause
 
+GPIO.cleanup()
+
 GPIO.setmode(GPIO.BCM)
 
-led = PWMLED(16)
+led = gpiozero.PWMLED(16)
 
 led.pulse()
-
-pause()
-#led.pulse()
 
 #GPIO.setup(16, GPIO.OUT)
 #GPIO.output(16, GPIO.HIGH)
