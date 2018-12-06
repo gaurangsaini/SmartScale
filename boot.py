@@ -2,36 +2,54 @@ import RPi.GPIO as GPIO
 import time
 import os
 import gpiozero
-from signal import pause
+import threading
 
 GPIO.cleanup()
 
 GPIO.setmode(GPIO.BCM)
 
-led = gpiozero.PWMLED(16)
+GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)   #front-button gpio detection
+GPIO.setup(26, GPIO.OUT)
 
+led = gpiozero.PWMLED(16)
 led.pulse()
 
-#GPIO.setup(16, GPIO.OUT)
-#GPIO.output(16, GPIO.HIGH)
+def buttonpress():
+    led.value = 0
+    
+    print('Button Pressed')
+    
+    GPIO.output(26, GPIO.HIGH)
+    time.sleep(0.25)
+    GPIO.output(26, GPIO.LOW)
+
+    #status = subprocess.call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
+    try:
+        retcode = subprocess.call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
+        if retcode < 0:
+            print >>sys.stderr, "Child was terminated by signal", -retcode
+        else:
+            print >>sys.stderr, "Child returned", retcode
+        except OSError as e:
+            print >>sys.stderr, "Execution failed:", e
+
+GPIO.add_event_detect(21, GPIO.FALLING, callback=buttonpress, bouncetime=300)
 
 #time.sleep(15)
 
-GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-#GPIO CHANGED FROM 4 TO 17, to 27, to 21(!)
-while True:
-    input_state = GPIO.input(21)
-    if input_state == False:
-        print('Button Pressed')
+#while True:
+#    input_state = GPIO.input(21)
+#    if input_state == False:
+#        print('Button Pressed')
         
-        GPIO.setup(26, GPIO.OUT)
-        GPIO.output(26, GPIO.HIGH)
-
-        time.sleep(0.25)
-
-        GPIO.output(26, GPIO.LOW)
         
-        GPIO.cleanup()
+#        GPIO.output(26, GPIO.HIGH)
 
-        os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
-        time.sleep(1)
+#        time.sleep(0.25)
+
+#        GPIO.output(26, GPIO.LOW)
+        
+#        GPIO.cleanup()
+
+#        os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
+#        time.sleep(1)
