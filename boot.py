@@ -3,7 +3,7 @@ import time
 import os
 import gpiozero
 import threading
-import subprocess
+import subprocess, signal
 
 GPIO.cleanup()
 
@@ -19,6 +19,14 @@ def pulseled():
 
 p = threading.Thread(name='pulseled', target=pulseled)
 
+def killprocesses():
+    p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+        if 'python' in line:
+            pid = int(line.split(None, 1)[0])
+            os.kill(pid, signal.SIGKILL)
+
 def onbuttonpress():
     led.value = 0
     
@@ -29,6 +37,7 @@ def onbuttonpress():
     GPIO.output(26, GPIO.LOW)
 
     def posttophp():
+        killprocesses()
         posttophp = os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
 
     pp = threading.Thread(name='posttophp', target=posttophp)
