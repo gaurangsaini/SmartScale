@@ -7,11 +7,6 @@ import sys
 import subprocess
 import time
 import urllib
-#import seven_segment_display
-#import seven_segment_i2c
-
-#bus = seven_segment_i2c.SevenSegmentI2c(1)
-#display = seven_segment_display.SevenSegmentDisplay(bus)
 
 weightval = None
 
@@ -35,7 +30,9 @@ BOTTOM_RIGHT = 1
 TOP_LEFT = 2
 BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
+
 weighta = weightb = weightc = 0					#
+led = gpiozero.LED(16)							#
 
 class EventProcessor:
     def __init__(self):
@@ -47,7 +44,6 @@ class EventProcessor:
 
     def mass(self, event):
 	weightval = event.totalWeight
-	led = gpiozero.LED(16)						#
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
@@ -59,25 +55,11 @@ class EventProcessor:
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
 
-                weightc = weightb			#
-                weightb = weighta 			#
-                weighta = self._weight		#
-
                 print self._weight
-
-                diff1 = abs(weightc - weightb)					#
-                diff2 = abs(weightb - weighta)					#
-
-                print (diff1, diff2)							#
-
-                if ( (diff1 < 0.75) and (diff2 < 0.75) ):		#
-                    led.on()														#
-                else:																#
-                    led.off()														#
 
 		url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
 		urllib.urlopen(url)
-#		printondisplay(self._weight)
+		indicateonled(self._weight)
             if not self._measured:
                 self._measured = True
 
@@ -300,33 +282,20 @@ class Wiiboard:
     def wait(self, millis):
         time.sleep(millis / 1000.0)
 
-#def printonscreen(vajan):
-	#display.clear()
-	#display.print_float(vajan, decimal_digits=1)
-	#display.write_display()
-	#return
-	
-#def printondisplay(vajan):
-#	display.clear_display()
-#	decimalpt = [0b00000100,0b00100000]
-#	display.set_nondigits(decimalpt)	
-#	intpart = int(vajan // 1)
-#	decpart = int((vajan % 1)*10)
-#	z = '%d%d' % (intpart, decpart)
-#	#print 'int ', intpart, ' & dec part ', decpart
-#	#print z, ' ===== ',vajan
-#	if (vajan < 0):
-#	    display.write_segments(2, [0b01000000])
-#	else:
-#	    display.write_int(z)
-#	return
+def indicateonled(vajan):
+    weightc = weightb			#
+    weightb = weighta 			#
+    weighta = vajan				#
 
-#def init_display():
-#	segment = [0b01000000]
-#	display.write_segments(0, segment)
-#	display.write_segments(1, segment)
-#	display.write_segments(2, segment)
-#	display.write_segments(3, segment)
+    diff1 = abs(weightc - weightb)					#
+    diff2 = abs(weightb - weighta)					#
+
+    print (diff1, diff2)							#
+
+    if ( (diff1 < 0.75) and (diff2 < 0.75) ):
+        led.on()													#
+    else:																#
+        led.off()														#
 
 def main():
     processor = EventProcessor()
