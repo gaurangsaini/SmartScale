@@ -30,8 +30,8 @@ def buttonpress():
             print >>sys.stderr, "Child was terminated by signal", -retcode
         else:
             print >>sys.stderr, "Child returned", retcode
-        except OSError as e:
-            print >>sys.stderr, "Execution failed:", e
+    except OSError as e:
+        print >>sys.stderr, "Execution failed:", e
 
 GPIO.add_event_detect(21, GPIO.FALLING, callback=buttonpress, bouncetime=300)
 
