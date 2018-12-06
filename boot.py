@@ -30,7 +30,7 @@ def onbuttonpress():
 
     #status = subprocess.call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
     try:
-        retcode = call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
+        retcode = subprocess.call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
         if retcode < 0:
             print >>sys.stderr, "Child was terminated by signal", -retcode
         else:
