@@ -65,7 +65,12 @@ class EventProcessor:
 
                 print self._weight
 
-                if ( (abs(weightc - weightb) < 0.2) and (abs(weightb - weighta) < 0.2) ):		#
+                diff1 = abs(weightc - weightb)					#
+                diff2 = abs(weightb - weighta)					#
+
+                print (diff1, diff2)							#
+
+                if ( (diff1 < 0.75) and (diff2 < 0.75) ):		#
                     led.on()														#
                 else:																#
                     led.off()														#
