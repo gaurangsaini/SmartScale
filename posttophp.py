@@ -31,10 +31,6 @@ TOP_LEFT = 2
 BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
 
-global weighta, weightb, weightc			#
-weighta = weightb = weightc = 0				#
-led = gpiozero.LED(16)						#
-
 class EventProcessor:
     def __init__(self):
         self._measured = False
@@ -316,6 +312,12 @@ def main():
     except:
         pass
 
+    global weighta 		#
+    global weightb 		#
+    global weightc		#
+    weighta = weightb = weightc = 1			#
+    led = gpiozero.LED(16)					#
+    
     print "Trying to connect..."
     board.connect(address)  # The wii board must be in sync mode at this time
     board.wait(200)
