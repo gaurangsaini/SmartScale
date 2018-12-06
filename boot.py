@@ -28,7 +28,11 @@ def onbuttonpress():
     time.sleep(0.25)
     GPIO.output(26, GPIO.LOW)
 
-    posttophp = os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
+    def posttophp():
+        posttophp = os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
+
+    pp = threading.Thread(name='posttophp', target=posttophp)
+    pp.start()
 
     #status = subprocess.call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
     #try:
@@ -52,24 +56,3 @@ d = threading.Thread(name='detectbuttonpress', target=detectbuttonpress)
 
 p.start()
 d.start()
-
-#GPIO.add_event_detect(21, GPIO.FALLING, callback=onbuttonpress, bouncetime=300)
-
-#time.sleep(15)
-
-#while True:
-    
-
-#        print('Button Pressed')
-        
-        
-#        GPIO.output(26, GPIO.HIGH)
-
-#        time.sleep(0.25)
-
-#        GPIO.output(26, GPIO.LOW)
-        
-#        GPIO.cleanup()
-
-#        os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
-#        time.sleep(1)
