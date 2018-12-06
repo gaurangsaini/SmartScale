@@ -11,7 +11,14 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)   #front-button gpio detection
 GPIO.setup(26, GPIO.OUT)
 
+def pulseled():
+    led = gpiozero.PWMLED(16)
+    led.pulse()
+
+p = threading.Thread(name='pulseled', target=pulseled)
+
 def onbuttonpress():
+    p.stop()
     led = gpiozero.PWMLED(16)
     led.value = 0
     
@@ -34,15 +41,14 @@ def onbuttonpress():
 o = threading.Thread(name='onbuttonpress', target=onbuttonpress)
 
 def detectbuttonpress():
-    led = gpiozero.PWMLED(16)
-    led.pulse()
-
-    input_state = GPIO.input(21)
-    if input_state == False:
-        o.start()
+    while True:
+        input_state = GPIO.input(21)
+        if input_state == False:
+            o.start()
 
 d = threading.Thread(name='detectbuttonpress', target=detectbuttonpress)
 
+p.start()
 d.start()
 
 #GPIO.add_event_detect(21, GPIO.FALLING, callback=onbuttonpress, bouncetime=300)
