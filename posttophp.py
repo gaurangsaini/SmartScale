@@ -31,7 +31,8 @@ TOP_LEFT = 2
 BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
 
-global weighta = weightb = weightc = 0		#
+global weighta, weightb, weightc			#
+weighta = weightb = weightc = 0				#
 led = gpiozero.LED(16)						#
 
 class EventProcessor:
