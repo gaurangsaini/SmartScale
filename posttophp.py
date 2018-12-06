@@ -283,7 +283,7 @@ class Wiiboard:
 
 def indicateonled(vajan):
 
-    led = gpiozero.LED(16)					#
+    led = gpiozero.LED(16)		#
 
     global weighta
     global weightb
@@ -300,8 +300,8 @@ def indicateonled(vajan):
 
     if ( (diff1 < 0.75) and (diff2 < 0.75) ):
         led.on()													#
-    else:																#
-        led.off()														#
+    elif ( (diff1 > 0.75) or (diff2 > 0.75) ):						#
+        led.off()													#
 
 def main():
     processor = EventProcessor()
