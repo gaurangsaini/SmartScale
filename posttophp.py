@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import gpiozero
 import collections
 import time
 import bluetooth
@@ -46,6 +46,8 @@ class EventProcessor:
 
     def mass(self, event):
 	weightval = event.totalWeight
+	weighta = weightb = weightc = 0		#
+	led = LED(16)						#
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
@@ -56,7 +58,18 @@ class EventProcessor:
                     self._sum += self._events[x]
                 self._weight = self._sum/WEIGHT_SAMPLES
                 self._measureCnt = 0
+
+                weightc = weightb			#
+                weightb = weighta 			#
+                weighta = self._weight		#
+
                 print self._weight
+
+                if ( (abs(weightc - weightb) < 0.2) && (abs(weight b - weighta) < 0.2) ):		#
+                    led.on()														#
+                else:																#
+                    led.off()														#
+
 		url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
 		urllib.urlopen(url)
 #		printondisplay(self._weight)
