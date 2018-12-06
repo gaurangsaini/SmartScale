@@ -1,15 +1,20 @@
 import RPi.GPIO as GPIO
 import time
 import os
-#import gpiozero
+import gpiozero
+from signal import pause
 
 GPIO.setmode(GPIO.BCM)
 
-#led = PWMLED(16)
+led = PWMLED(16)
+
+led.pulse()
+
+pause()
 #led.pulse()
 
-GPIO.setup(16, GPIO.OUT)
-GPIO.output(16, GPIO.HIGH)
+#GPIO.setup(16, GPIO.OUT)
+#GPIO.output(16, GPIO.HIGH)
 
 #time.sleep(15)
 
@@ -27,5 +32,7 @@ while True:
 
         GPIO.output(26, GPIO.LOW)
         
+        GPIO.cleanup()
+
         os.system('python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B')
         time.sleep(1)
