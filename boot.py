@@ -11,10 +11,10 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)   #front-button gpio detection
 GPIO.setup(26, GPIO.OUT)
 
-led = gpiozero.PWMLED(16)
-led.pulse()
+o = threading.Thread(name='onbuttonpress', target=onbuttonpress)
+d = threading.Thread(name='detectbuttonpress', target=detectbuttonpress)
 
-def buttonpress():
+def onbuttonpress():
     led.value = 0
     
     print('Button Pressed')
@@ -33,13 +33,23 @@ def buttonpress():
     except OSError as e:
         print >>sys.stderr, "Execution failed:", e
 
-GPIO.add_event_detect(21, GPIO.FALLING, callback=buttonpress, bouncetime=300)
+def detectbuttonpress():
+    led = gpiozero.PWMLED(16)
+    led.pulse()
+
+    input_state = GPIO.input(21)
+    if input_state == False:
+        o.start()
+
+d.start()
+
+#GPIO.add_event_detect(21, GPIO.FALLING, callback=onbuttonpress, bouncetime=300)
 
 #time.sleep(15)
 
 #while True:
-#    input_state = GPIO.input(21)
-#    if input_state == False:
+    
+
 #        print('Button Pressed')
         
         
