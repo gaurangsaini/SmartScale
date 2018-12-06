@@ -29,7 +29,7 @@ def onbuttonpress():
 
     #status = subprocess.call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
     try:
-        retcode = subprocess.call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
+        retcode = call("python /home/pi/SmartScale/posttophp.py 34:AF:2C:2D:9E:4B", shell=True)
         if retcode < 0:
             print >>sys.stderr, "Child was terminated by signal", -retcode
         else:
@@ -37,13 +37,13 @@ def onbuttonpress():
     except OSError as e:
         print >>sys.stderr, "Execution failed:", e
 
-o = threading.Thread(name='onbuttonpress', target=onbuttonpress)
+#o = threading.Thread(name='onbuttonpress', target=onbuttonpress)
 
 def detectbuttonpress():
     while True:
         input_state = GPIO.input(21)
         if input_state == False:
-            o.start()
+            onbuttonpress()
 
 d = threading.Thread(name='detectbuttonpress', target=detectbuttonpress)
 
