@@ -32,8 +32,8 @@ TOP_LEFT = 2
 BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
 
-weighta = weightb = weightc = 0         #
-led = gpiozero.LED(16)                  #
+weighta = weightb = weightc = 0 		#
+led = gpiozero.LED(16)					#
 
 class EventProcessor:
     def __init__(self):
@@ -41,10 +41,10 @@ class EventProcessor:
         self.done = False
         self._measureCnt = 0
         self._events = range(WEIGHT_SAMPLES)
-        self._scaleId = 3   #
+        self._scaleId = 3	#
 
     def mass(self, event):
-    weightval = event.totalWeight
+	weightval = event.totalWeight
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
@@ -58,9 +58,9 @@ class EventProcessor:
 
                 print self._weight
 
-        url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
-        urllib.urlopen(url)
-        indicateonled(self._weight)
+		url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
+		urllib.urlopen(url)
+		indicateonled(self._weight)
             if not self._measured:
                 self._measured = True
 
@@ -290,19 +290,19 @@ def indicateonled(vajan):
     global weightb
     global weightc
 
-    weightc = weightb           #
-    weightb = weighta           #
-    weighta = vajan             #
+    weightc = weightb			#
+    weightb = weighta 			#
+    weighta = vajan				#
 
-    diff1 = abs(weightc - weightb)                  #
-    diff2 = abs(weightb - weighta)                  #
+    diff1 = abs(weightc - weightb)					#
+    diff2 = abs(weightb - weighta)					#
 
-    print (diff1, diff2)                            #
+    print (diff1, diff2)							#
 
     if ( (diff1 < 0.75) and (diff2 < 0.75) ):
-        led.on()                                                    #
-    elif ( (diff1 > 0.75) or (diff2 > 0.75) ):                      #
-        led.off()                                                   #
+        led.on()													#
+    elif ( (diff1 > 0.75) or (diff2 > 0.75) ):						#
+        led.off()													#
 
 def main():
 
@@ -311,7 +311,7 @@ def main():
     board = Wiiboard(processor)
     if len(sys.argv) == 1:
         print "Discovering board..."
-        address = board.discover()
+        address = board.discover() 	# "34:AF:2C:2D:82:7E"
     else:
         address = sys.argv[1]
 
