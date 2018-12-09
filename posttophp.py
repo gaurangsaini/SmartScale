@@ -301,7 +301,7 @@ def indicateonled(vajan):
 
     if ( (diff1 < 0.75) and (diff2 < 0.75) ):
         led.on()													#
-        time.sleep(0.2)
+        time.sleep(2)
     elif ( (diff1 > 0.75) or (diff2 > 0.75) ):						#
         led.off()													#
 
