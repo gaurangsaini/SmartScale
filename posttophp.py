@@ -33,7 +33,6 @@ BOTTOM_LEFT = 3
 BLUETOOTH_NAME = "Nintendo RVL-WBC-01"
 
 weighta = weightb = weightc = 0 		#
-led = gpiozero.LED(16)					#
 
 class EventProcessor:
     def __init__(self):
@@ -285,7 +284,7 @@ class Wiiboard:
 
 def indicateonled(vajan):
 
-    global led
+    led = gpiozero.LED(16)                  #
     global weighta
     global weightb
     global weightc
@@ -301,7 +300,7 @@ def indicateonled(vajan):
 
     if ( (diff1 < 0.75) and (diff2 < 0.75) ):
         led.on()													#
-        time.sleep(2)
+        time.sleep(0.2)
     elif ( (diff1 > 0.75) or (diff2 > 0.75) ):						#
         led.off()													#
 
