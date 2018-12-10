@@ -43,7 +43,8 @@ class EventProcessor:
         self._scaleId = 5   #
 
     def mass(self, event):
-    weightval = event.totalWeight
+
+    	weightval = event.totalWeight
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
