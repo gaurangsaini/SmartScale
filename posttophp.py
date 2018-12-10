@@ -43,7 +43,7 @@ class EventProcessor:
         self._scaleId = 5   #
 
     def mass(self, event):
-    weightval = event.totalWeight
+    	weightval = event.totalWeight
 
         if (event.totalWeight > 1):
             self._events[self._measureCnt] = event.totalWeight*2.20462
@@ -56,13 +56,11 @@ class EventProcessor:
                 self._measureCnt = 0
 
                 print self._weight
-
-        url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
-        urllib.urlopen(url)
-        indicateonled(self._weight)
+                url = "https://hobokenlaundryprocessingcenter.com/hlpc/test/customscripts/smartscale.php/?scaleid=" + str(self._scaleId) + "&weightval=" + str(self._weight)
+                urllib.urlopen(url)
+                indicateonled(self._weight)
             if not self._measured:
                 self._measured = True
-
 
     @property
     def weight(self):
