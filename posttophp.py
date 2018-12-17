@@ -284,7 +284,7 @@ class Wiiboard:
 
 def indicateonled(vajan):
 
-    led = gpiozero.LED(16)                  #
+    led = gpiozero.LED(5)                  #
     global weighta
     global weightb
     global weightc

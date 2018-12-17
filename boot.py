@@ -12,7 +12,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)   #front-button gpio detection
 GPIO.setup(26, GPIO.OUT)
 
-led = gpiozero.PWMLED(16)
+led = gpiozero.PWMLED(5)
 
 def pulseled():
     led.pulse()
